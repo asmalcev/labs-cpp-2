@@ -1,6 +1,14 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 
+int LANG_MODE = 1;
+/*
+ * 0 -> bilingual
+ * 1 -> english
+ * 2 -> russian
+ * 
+*/
+
 void fillScreen(SDL_Window *window)
 {
   SDL_Surface *screen = SDL_GetWindowSurface(window);
@@ -41,10 +49,24 @@ int eventFilter(void *userdata, SDL_Event *event)
       SDL_PushEvent(&exitEvent);
     }
 
-    SDL_Log("key Down %d", event->key.keysym.sym);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Нажатие клавиши %d", event->key.keysym.sym);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("key Down %d", event->key.keysym.sym);
+    }
     break;
   case SDL_KEYUP:
-    SDL_Log("key Up %d", event->key.keysym.sym);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Поднятие клавиши %d", event->key.keysym.sym);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("key Up %d", event->key.keysym.sym);
+    }
     break;
   case SDL_TEXTEDITING:
     SDL_Log("Keyboard text editing (composition). Composition is '%s', cursor start from %d and selection lenght is %d", event->edit.text, event->edit.start, event->edit.length);
@@ -97,8 +119,10 @@ int eventFilter(void *userdata, SDL_Event *event)
       SDL_Log("Window %d shown", event->window.windowID);
       break;
     case SDL_WINDOWEVENT_HIDDEN:
+    {
       SDL_Log("Window %d hidden", event->window.windowID);
       break;
+    }
     case SDL_WINDOWEVENT_EXPOSED:
       fillScreen(SDL_GetWindowFromID(event->window.windowID));
       SDL_Log("Window %d exposed", event->window.windowID);
@@ -153,9 +177,16 @@ Uint32 customEventFunction(Uint32 interval, void *param)
 {
   SDL_Event event = {SDL_WINDOWEVENT};
 
-  SDL_Log("Timer signaled with interval %d ms", interval);
+  if (LANG_MODE == 2 || LANG_MODE == 0)
+  {
+    SDL_Log("Таймер с интервалом %d ms", interval);
+  }
+  if (LANG_MODE == 1 || LANG_MODE == 0)
+  {
+    SDL_Log("Timer signaled with interval %d ms", interval);
+  }
 
-  event.window.windowID = SDL_GetWindowID((SDL_Window *) param);
+  event.window.windowID = SDL_GetWindowID((SDL_Window *)param);
   event.window.event = SDL_WINDOWEVENT_EXPOSED;
 
   SDL_PushEvent(&event);
@@ -166,16 +197,40 @@ Uint32 repeatOnceFunction(Uint32 interval, void *param)
 {
   SDL_Event exitEvent = {SDL_QUIT};
 
-  SDL_Log("Timer signaled with interval %d ms", interval);
+  if (LANG_MODE == 2 || LANG_MODE == 0)
+  {
+    SDL_Log("Таймер с интервалом %d ms", interval);
+  }
+  if (LANG_MODE == 1 || LANG_MODE == 0)
+  {
+    SDL_Log("Timer signaled with interval %d ms", interval);
+  }
 
   if (asmFunction() != 0)
   {
-    SDL_HideWindow((SDL_Window *) param);
+    SDL_HideWindow((SDL_Window *)param);
 
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Something going wrong", "Find me! I'm scared", NULL);
+    if (LANG_MODE == 0)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Что-то пошло не так - Something going wrong", "Найди меня! Я напуган - Find me! I'm scared", NULL);
 
-    SDL_Delay(15000); /* 15 sec */
-    SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "You didn't find me! You disappointed me... I'm leaving.");
+      SDL_Delay(15000); /* 15 sec */
+      SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Ты не нашел меня! Ты разочаровал меня... Я ухожу - You didn't find me! You disappointed me... I'm leaving.");
+    }
+    else if (LANG_MODE == 1)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Something going wrong", "Find me! I'm scared", NULL);
+
+      SDL_Delay(15000); /* 15 sec */
+      SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "You didn't find me! You disappointed me... I'm leaving.");
+    }
+    else if (LANG_MODE == 2)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Что-то пошло не так", "Найди меня! Я напуган", NULL);
+
+      SDL_Delay(15000); /* 15 sec */
+      SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Ты не нашел меня! Ты разочаровал меня... Я ухожу.");
+    }
 
     SDL_PushEvent(&exitEvent);
   }
@@ -190,6 +245,17 @@ void clearFunction(void)
 
 int main(int argc, char *argv[])
 {
+  if (argc > 1)
+  {
+    if (!strcmp("bilingual", argv[1]))
+    {
+      LANG_MODE = 0;
+    }
+    else if (!strcmp("russian", argv[1]))
+    {
+      LANG_MODE = 2;
+    }
+  }
   SDL_Window *windowContext = NULL;
   SDL_TimerID repeatOnceFunctionTimer;
   SDL_TimerID customEventFunctionTimer;
@@ -199,35 +265,101 @@ int main(int argc, char *argv[])
 
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0)
   {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to init SDL2. See the log for more info.", NULL);
-    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to init SDL2, error: %s", SDL_GetError());
+    if (LANG_MODE == 0)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка - Error", "Невозможно запустить SDL2. Дополнительную информацию смотрите в логах - Unable to init SDL2. See the log for more info. ", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно запустить SDL2, ошибка - Unable to init SDL2, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 1)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to init SDL2. See the log for more info. ", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to init SDL2, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 2)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка", "Невозможно запустить SDL2. Дополнительную информацию смотрите в логах. ", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно запустить SDL2, ошибка: %s", SDL_GetError());
+    }
     return 1;
   }
 
   SDL_SetEventFilter(eventFilter, NULL);
 
-  SDL_Log("Start creating window");
+  if (LANG_MODE == 2 || LANG_MODE == 0)
+  {
+    SDL_Log("Начало создания окна");
+  }
+  if (LANG_MODE == 1 || LANG_MODE == 0)
+  {
+    SDL_Log("Start creating window");
+  }
   if (!(windowContext = SDL_CreateWindow("SDL2: Magic Events", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE)))
   {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to create window. See the log for more info.", NULL);
-    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window, error: %s", SDL_GetError());
+    if (LANG_MODE == 0)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка - Error", "Невозможно создать окно. Дополнительную информацию смотрите в логах - Unable to create window. See the log for more info.", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно создать окно, ошибка - Unable to create window, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 1)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to create window. See the log for more info.", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to create window, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 2)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка", "Невозможно создать окно. Дополнительную информацию смотрите в логах. ", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно создать окно, ошибка: %s", SDL_GetError());
+    }
     return 1;
   }
   else
   {
-    SDL_Log("Creating window - succeeded");
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Создание окна - успешно");
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Creating window - succeeded");
+    }
   }
 
   if (!(customEventFunctionTimer = SDL_AddTimer(2000 /* 2 sec */, customEventFunction, windowContext)))
   {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to create custom event timer. See the log for more info.", windowContext);
-    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to create custom event timer, error: %s", SDL_GetError());
+    if (LANG_MODE == 0)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка - Error", "Невозможно создать таймер пользовательского события. Дополнительную информацию смотрите в логах - Unable to create custom event timer. See the log for more info.", windowContext);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно создать таймер пользовательского события - Unable to create custom event timer, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 1)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to create custom event timer. See the log for more info.", windowContext);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to create custom event timer, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 2)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка", "Невозможно создать таймер пользовательского события. Дополнительную информацию смотрите в логах. ", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно создать таймер пользовательского события, ошибка: %s", SDL_GetError());
+    }
   }
 
   if (!(repeatOnceFunctionTimer = SDL_AddTimer(10000 /* 10 sec */, repeatOnceFunction, windowContext)))
   {
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to create repeat once timer. See the log for more info.", windowContext);
-    SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to create repeat once timer, error: %s", SDL_GetError());
+    if (LANG_MODE == 0)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка - Error", "Невозможно создать одноразовый таймер. Дополнительную информацию смотрите в логах - Unable to create repeat once timer. See the log for more info.", windowContext);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно создать одноразовый таймер, ошибка - Unable to create repeat once timer, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 1)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to create repeat once timer. See the log for more info.", windowContext);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Unable to create repeat once timer, error: %s", SDL_GetError());
+    }
+    else if (LANG_MODE == 2)
+    {
+      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Ошибка", "Невозможно создать одноразовый таймер. Дополнительную информацию смотрите в логах. ", NULL);
+      SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, "Невозможно создать одноразовый таймер, ошибка: %s", SDL_GetError());
+    }
   }
 
   SDL_WaitEvent(NULL);
@@ -235,10 +367,24 @@ int main(int argc, char *argv[])
   SDL_RemoveTimer(repeatOnceFunctionTimer);
   SDL_RemoveTimer(customEventFunctionTimer);
 
-  SDL_Log("Start destroing window");
+  if (LANG_MODE == 2 || LANG_MODE == 0)
+  {
+    SDL_Log("Начало разрушения окон");
+  }
+  if (LANG_MODE == 1 || LANG_MODE == 0)
+  {
+    SDL_Log("Start destroing window");
+  }
   SDL_DestroyWindow(windowContext);
   windowContext = NULL;
-  SDL_Log("destroing window - succeeded");
+  if (LANG_MODE == 2 || LANG_MODE == 0)
+  {
+    SDL_Log("разрушение окна - успешно");
+  }
+  if (LANG_MODE == 1 || LANG_MODE == 0)
+  {
+    SDL_Log("destroing window - succeeded");
+  }
 
   return 0;
 }
