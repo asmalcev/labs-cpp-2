@@ -69,104 +69,309 @@ int eventFilter(void *userdata, SDL_Event *event)
     }
     break;
   case SDL_TEXTEDITING:
-    SDL_Log("Keyboard text editing (composition). Composition is '%s', cursor start from %d and selection lenght is %d", event->edit.text, event->edit.start, event->edit.length);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Редактирование текста с клавиатуры (композиция). Композиция - %s, курсор начинается с %d, а длина выделения - %d", event->edit.text, event->edit.start, event->edit.length);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Keyboard text editing (composition). Composition is '%s', cursor start from %d and selection lenght is %d", event->edit.text, event->edit.start, event->edit.length);
+    }
     break;
   case SDL_TEXTINPUT:
-    SDL_Log("Keyboard text input. Text is '%s'", event->text.text);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Ввод текста с клавиатуры. Текст '%s'", event->text.text);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Keyboard text input. Text is '%s'", event->text.text);
+    }
     break;
   case SDL_FINGERMOTION:
-    SDL_Log("Finger: %i, x: %i, y: %i", event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Палец: %i, x: %i, y: %i", event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Finger: %i, x: %i, y: %i", event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    }
     break;
   case SDL_FINGERDOWN:
-    SDL_Log("Finger: %lld down - x: %i, y: %i",
-            event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Палец: %lld вниз - x: %i, y: %i",
+              event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Finger: %lld down - x: %i, y: %i",
+              event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    }
     break;
   case SDL_FINGERUP:
-    SDL_Log("Finger: %lld up - x: %i, y: %i", event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Палец: %lld вверх - x: %i, y: %i", event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Finger: %lld up - x: %i, y: %i", event->tfinger.fingerId, event->tfinger.x, event->tfinger.y);
+    }
     break;
   case SDL_MULTIGESTURE:
-    SDL_Log("Multi Gesture: x = %f, y = %f, dAng = %f, dR = %f", event->mgesture.x, event->mgesture.y, event->mgesture.dTheta, event->mgesture.dDist);
-    SDL_Log("Multi Gesture: numDownTouch = %i", event->mgesture.numFingers);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Мульти-жест: x = %f, y = %f, dAng = %f, dR = %f", event->mgesture.x, event->mgesture.y, event->mgesture.dTheta, event->mgesture.dDist);
+      SDL_Log("Мульти-жест: количествоПрикосновений = %i", event->mgesture.numFingers);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Multi Gesture: x = %f, y = %f, dAng = %f, dR = %f", event->mgesture.x, event->mgesture.y, event->mgesture.dTheta, event->mgesture.dDist);
+      SDL_Log("Multi Gesture: numDownTouch = %i", event->mgesture.numFingers);
+    }
     break;
   case SDL_DOLLARGESTURE:
-    SDL_Log("Gesture %lld performed, error: %f", event->dgesture.gestureId, event->dgesture.error);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Жест %lld выполнено, ошибка: %f", event->dgesture.gestureId, event->dgesture.error);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Gesture %lld performed, error: %f", event->dgesture.gestureId, event->dgesture.error);
+    }
     break;
   case SDL_DOLLARRECORD:
-    SDL_Log("Recorded gesture: %lld", event->dgesture.gestureId);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Записанный жест: %lld", event->dgesture.gestureId);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Recorded gesture: %lld", event->dgesture.gestureId);
+    }
     break;
   case SDL_MOUSEMOTION:
-    SDL_Log("Mouse Move. X=%d, Y=%d, RelativeX=%d, RelativeY=%d", event->motion.x, event->motion.y, event->motion.xrel, event->motion.yrel);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Движение мыши. X=%d, Y=%d, смещениеX=%d, смещениеY=%d", event->motion.x, event->motion.y, event->motion.xrel, event->motion.yrel);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Mouse Move. X=%d, Y=%d, RelativeX=%d, RelativeY=%d", event->motion.x, event->motion.y, event->motion.xrel, event->motion.yrel);
+    }
     break;
   case SDL_MOUSEBUTTONDOWN:
     if (event->button.button == SDL_BUTTON_LEFT)
       asmFunction();
 
-    SDL_Log("Mouse Button Down %u", event->button.button);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Нажатие кнопки мыши %u", event->button.button);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Mouse Button Down %u", event->button.button);
+    }
     break;
   case SDL_MOUSEBUTTONUP:
-    SDL_Log("Mouse Button Up %u", event->button.button);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Поднятие кнопки мыши %u", event->button.button);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Mouse Button Up %u", event->button.button);
+    }
     break;
   case SDL_MOUSEWHEEL:
-    SDL_Log("Mouse Wheel X=%d, Y=%d", event->wheel.x, event->wheel.y);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Колесо мыши X=%d, Y=%d", event->wheel.x, event->wheel.y);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Mouse Wheel X=%d, Y=%d", event->wheel.x, event->wheel.y);
+    }
     break;
   case SDL_QUIT:
-    SDL_Log("User-requested quit");
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Пользовательский запрос выхода");
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("User-requested quit");
+    }
     return 1;
   case SDL_WINDOWEVENT:
     switch (event->window.event)
     {
     case SDL_WINDOWEVENT_SHOWN:
-      SDL_Log("Window %d shown", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d показано", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d shown", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_HIDDEN:
     {
-      SDL_Log("Window %d hidden", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d спрятано", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d hidden", event->window.windowID);
+      }
       break;
     }
     case SDL_WINDOWEVENT_EXPOSED:
       fillScreen(SDL_GetWindowFromID(event->window.windowID));
-      SDL_Log("Window %d exposed", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d выставлено", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d exposed", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_MOVED:
-      SDL_Log("Window %d moved to %d,%d", event->window.windowID, event->window.data1, event->window.data2);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d сдвинуто на %d,%d", event->window.windowID, event->window.data1, event->window.data2);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d moved to %d,%d", event->window.windowID, event->window.data1, event->window.data2);
+      }
       break;
     case SDL_WINDOWEVENT_RESIZED:
-      SDL_Log("Window %d resized to %dx%d", event->window.windowID, event->window.data1, event->window.data2);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d изменен размер на %dx%d", event->window.windowID, event->window.data1, event->window.data2);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d resized to %dx%d", event->window.windowID, event->window.data1, event->window.data2);
+      }
       break;
     case SDL_WINDOWEVENT_SIZE_CHANGED:
-      SDL_Log("Window %d size changed to %dx%d", event->window.windowID, event->window.data1, event->window.data2);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d размер изменен на %dx%d", event->window.windowID, event->window.data1, event->window.data2);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d size changed to %dx%d", event->window.windowID, event->window.data1, event->window.data2);
+      }
       break;
     case SDL_WINDOWEVENT_MINIMIZED:
-      SDL_Log("Window %d minimized", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d минимизировано", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d minimized", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_MAXIMIZED:
-      SDL_Log("Window %d maximized", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d максимизировано", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d maximized", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_RESTORED:
-      SDL_Log("Window %d restored", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d восстановлено", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d restored", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_ENTER:
-      SDL_Log("Mouse entered window %d", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Мышь над окном %d", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Mouse entered window %d", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_LEAVE:
-      SDL_Log("Mouse left window %d", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Мышь ушла с окна %d", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Mouse left window %d", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_FOCUS_GAINED:
-      SDL_Log("Window %d gained keyboard focus", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d получил фокус клавиатуры", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d gained keyboard focus", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_FOCUS_LOST:
-      SDL_Log("Window %d lost keyboard focus", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d потеряло фокус клавиатуры", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d lost keyboard focus", event->window.windowID);
+      }
       break;
     case SDL_WINDOWEVENT_CLOSE:
-      SDL_Log("Window %d closed", event->window.windowID);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d закрыто", event->window.windowID);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d closed", event->window.windowID);
+      }
       break;
     default:
-      SDL_Log("Window %d got unknown event %d", event->window.windowID, event->window.event);
+      if (LANG_MODE == 2 || LANG_MODE == 0)
+      {
+        SDL_Log("Окно %d получило неизвестное событие %d", event->window.windowID, event->window.event);
+      }
+      if (LANG_MODE == 1 || LANG_MODE == 0)
+      {
+        SDL_Log("Window %d got unknown event %d", event->window.windowID, event->window.event);
+      }
       break;
     }
     break;
   default:
-    SDL_Log("Got unknown event %d", event->type);
+    if (LANG_MODE == 2 || LANG_MODE == 0)
+    {
+      SDL_Log("Получено неизвестное событие %d", event->type);
+    }
+    if (LANG_MODE == 1 || LANG_MODE == 0)
+    {
+      SDL_Log("Got unknown event %d", event->type);
+    }
     break;
   }
 
