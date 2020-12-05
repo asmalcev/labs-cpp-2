@@ -324,7 +324,7 @@ int eventFilter(void *userdata, SDL_Event *event)
     case SDL_WINDOWEVENT_FOCUS_GAINED:
       if (LANG_MODE == 2 || LANG_MODE == 0)
       {
-        SDL_Log("Окно %d получил фокус клавиатуры", event->window.windowID);
+        SDL_Log("Окно %d получило фокус клавиатуры", event->window.windowID);
       }
       if (LANG_MODE == 1 || LANG_MODE == 0)
       {
@@ -339,6 +339,18 @@ int eventFilter(void *userdata, SDL_Event *event)
       if (LANG_MODE == 1 || LANG_MODE == 0)
       {
         SDL_Log("Window %d lost keyboard focus", event->window.windowID);
+      }
+      if (LANG_MODE == 0)
+      {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Фокус потерян - Focus lost", "Если это Вы взяли фокус, то обязательно его верните - If it's you took the focus, then just give it back, immediately", NULL);
+      }
+      else if (LANG_MODE == 1)
+      {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Focus lost","If it's you took the focus, then just give it back, immediately", NULL);
+      }
+      else if (LANG_MODE == 2)
+      {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Фокус потерян", "Если это Вы взяли фокус, то обязательно его верните.", NULL);
       }
       break;
     case SDL_WINDOWEVENT_CLOSE:
